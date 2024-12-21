@@ -1,8 +1,8 @@
 <?php
-include 'db.php'; // Include database connection
+include 'db.php'; 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Collect and sanitize input data
+    
     $name = htmlspecialchars(trim($_POST['name']));
     $email = htmlspecialchars(trim($_POST['email']));
     $subject = htmlspecialchars(trim($_POST['subject']));
@@ -51,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <li><a href="#experience">Experience</a></li>
                 <li><a href="#projects">Projects</a></li>
                 <li><a href="contact.php">Contact</a></li>
-                <!-- <li><a href="add_project.php">Add Project</a></li> -->
+                <li><a href="add_project.php">Add Project</a></li>
             </ul>
         </div>
     </nav>
@@ -86,7 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     if (message) {
                         message.style.display = 'none';
                     }
-                }, 5000); // Message disappears after 5 seconds
+                }, 5000); 
             </script>
         <?php elseif (isset($errorMessage)): ?>
             <p class="error"><?php echo $errorMessage; ?></p>

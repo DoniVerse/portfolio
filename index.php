@@ -1,25 +1,29 @@
 <?php
-include 'db.php'; // Include database connection
-session_start(); // Start session for handling uploads
+include 'db.php'; 
+session_start(); 
 
-// Fetch projects from the database
+
 $result = $conn->query("SELECT * FROM projects ORDER BY created_at DESC");
 
 
 $hardCodedProjects = [
     [
-        'title' => 'safe space',
-        'description' => 'an online journal.',
-        'image_path' => 'safe space.png', 
+        'title' => 'Safe Space',
+        'description' => 'An online journal.',
+        'image' => 'safe space.png',  
         'link' => 'https://github.com/DoniVerse/safe-space.git'
     ],
     [
-        'title' => 'mindfull moments',
-        'description' => 'a mental wellness platform.',
-        'image_path' => 'wellness.jpg', 
+        'title' => 'Mindful Moments',
+        'description' => 'A mental wellness platform.',
+        'image' => 'wellness.jpg',  
         'link' => 'https://github.com/DoniVerse/mindfull_moments.git'
     ]
 ];
+
+
+$dbProjects = $result->fetch_all(MYSQLI_ASSOC);
+$projects = array_merge($hardCodedProjects, $dbProjects);
 ?>
 
 <!DOCTYPE html>
@@ -41,11 +45,11 @@ $hardCodedProjects = [
                 <li><a href="#experience">Experience</a></li>
                 <li><a href="#projects">Projects</a></li>
                 <li><a href="#contact">Contact</a></li>
-                <!-- uncoment this when i want to add a project  -->
-                <!-- <li><a href="add_project.php">Add Project</a></li> -->
+                <li><a href="add_project.php">Add Project</a></li>
             </ul>
         </div>
     </nav>
+    
     <nav id="hamburger-nav">
         <div class="logo">Arsema Teferi</div>
         <div class="hamburger-menu">
@@ -62,6 +66,7 @@ $hardCodedProjects = [
             </div>
         </div>
     </nav>
+
     <section id="profile">
         <div class="section__pic-container">
             <img src="profile2.png" alt="profile picture" />
@@ -80,6 +85,7 @@ $hardCodedProjects = [
             </div>
         </div>
     </section>
+
     <section id="about">
         <h1 class="title">About Me</h1>
         <div class="section-container">
@@ -104,6 +110,7 @@ $hardCodedProjects = [
             </div>
         </div>
     </section>
+
     <section id="experience">
         <h1 class="title">Experience</h1>
         <div class="experience-details-container">
@@ -141,6 +148,7 @@ $hardCodedProjects = [
                         </article>
                     </div>
                 </div>
+
                 <div class="details-container">
                     <h2 class="experience-sub-title">Backend Development</h2>
                     <div class="article-container">
@@ -170,26 +178,22 @@ $hardCodedProjects = [
             </div>
         </div>
     </section>
+
     <section id="projects">
         <p class="section__text__p1">Recent</p>
         <h1 class="title">Projects</h1>
         
-        <?php
-        
-        $projects = array_merge($hardCodedProjects, $result->fetch_all(MYSQLI_ASSOC));
-        
-     
-        if (count($projects) > 0): ?>
+        <?php if (count($projects) > 0): ?>
             <?php foreach ($projects as $project): ?>
                 <div class="details-container color-container">
                     <div class="article-container">
-                        <img src="<?php echo htmlspecialchars($project['image_path']); ?>" alt="<?php echo htmlspecialchars($project['title']); ?>" class="project-img" />
+                        <img src="<?php echo htmlspecialchars($project['image'] ?? ''); ?>" alt="<?php echo htmlspecialchars($project['title']); ?>" class="project-img" />
                     </div>
                     <h2 class="experience-sub-title project-title"><?php echo htmlspecialchars($project['title']); ?></h2>
                     <p><?php echo htmlspecialchars($project['description']); ?></p>
                     <div class="btn-container">
                         <button class="btn btn-color-2 project-btn" onclick="window.open('<?php echo htmlspecialchars($project['link']); ?>')">Github</button>
-                        <?php if (isset($project['id'])): // Check if it's a dynamic project ?>
+                        <?php if (isset($project['id'])): ?>
                             <a href="delete_project.php?id=<?php echo $project['id']; ?>" class="btn btn-color-1">Delete</a>
                         <?php endif; ?>
                     </div>
@@ -199,6 +203,7 @@ $hardCodedProjects = [
             <p>No projects found.</p>
         <?php endif; ?>
     </section>
+
     <section id="contact">
         <h1 class="title">Contact Me</h1>
         <div class="contact-info-upper-container">
@@ -212,6 +217,7 @@ $hardCodedProjects = [
             </div>
         </div>
     </section>
+
     <footer>
         <nav>
             <div class="nav-links-container">
@@ -230,5 +236,5 @@ $hardCodedProjects = [
 </html>
 
 <?php
-$conn->close(); // Close the database connection
+$conn->close(); 
 ?>
