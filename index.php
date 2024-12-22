@@ -195,7 +195,8 @@ $projects = array_merge($hardCodedProjects, $dbProjects);
                         <button class="btn btn-color-2 project-btn" onclick="window.open('<?php echo htmlspecialchars($project['link']); ?>')">Github</button>
                         <?php if (isset($project['id'])): ?>
                             <a href="delete_project.php?id=<?php echo $project['id']; ?>" class="btn btn-color-1">Delete</a>
-                        <?php endif; ?>
+                            <a href="edit_project.php?id=<?php echo $project['id']; ?>" class="btn btn-color-1">Edit</a>
+                            <?php endif; ?>
                     </div>
                 </div>
             <?php endforeach; ?>
