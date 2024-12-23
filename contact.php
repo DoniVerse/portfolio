@@ -8,30 +8,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $subject = htmlspecialchars(trim($_POST['subject']));
     $message = htmlspecialchars(trim($_POST['message']));
 
-   
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         die("Invalid email format");
     }
 
-  
+    // Send the email
     $to = "arsemateferi5@gmail.com"; 
     $headers = "From: $name <$email>\r\n";
     $headers .= "Reply-To: $email\r\n";
     $headers .= "Content-Type: text/plain; charset=utf-8\r\n";
     
-  
     $body = "Name: $name\n";
     $body .= "Email: $email\n";
     $body .= "Subject: $subject\n\n";
     $body .= "Message:\n$message\n";
 
-    
     if (mail($to, $subject, $body, $headers)) {
-        $successMessage = "Message sent successfully!";
+        // Insert into the database
+        $stmt = $conn->prepare("INSERT INTO contact_messages (name, email, subject, message) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $name, $email, $subject, $message);
+
+        if ($stmt->execute()) {
+            $successMessage = "Message sent successfully!";
+        } else {
+            $errorMessage = "Message sent, but there was an issue saving to the database.";
+        }
+
+        $stmt->close();
     } else {
         $errorMessage = "There was a problem sending your message.";
     }
 }
+
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -97,49 +106,48 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <p>Copyright &#169; 2024 Arsema Teferi. All Rights Reserved.</p>
     </footer>
 
-<style>
+    <style>
         #contact-form {
-    display: flex;
-    flex-direction: column;
-    max-width: 500px;
-    margin: auto;
-}
+            display: flex;
+            flex-direction: column;
+            max-width: 500px;
+            margin: auto;
+        }
 
-.form-group {
-    margin-bottom: 15px;
-}
+        .form-group {
+            margin-bottom: 15px;
+        }
 
-label {
-    margin-bottom: 5px;
-}
+        label {
+            margin-bottom: 5px;
+        }
 
-input, textarea {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    width: 100%;
-}
+        input, textarea {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+        }
 
-button {
-  
-    color: red;
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
+        button {
+            color: red;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
 
-button:hover {
-    background-color:
-}
+        button:hover {
+            background-color: #ffcccc; /* Adjust hover color here */
+        }
 
-.success {
-    color: green;
-}
+        .success {
+            color: green;
+        }
 
-.error {
-    color: red;
-}
+        .error {
+            color: red;
+        }
     </style>
 </body>
 </html>
